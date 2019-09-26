@@ -7,11 +7,16 @@ Author: Evgeny Stefanenko
 Author URI: https://forum.clarionlife.net
 */
 
-add_filter('the_title', 'psu_filter_function_name', 10, 2);
-function psu_filter_function_name($title, $id)
+add_filter('the_content', 'psu_filter_function_name');
+function psu_filter_function_name($content)
 {
-    $date = get_the_date("", $id);
+    $date = get_the_date();
     $name = get_bloginfo();
-    $title = "{$date} &ndash; {$name} &ndash; {$title}";
-    return $title;
+    $suffix = "{$date} &ndash; {$name} &ndash; ";
+    if (substr($content,0,3) == "<p>") {
+    	$content = "<p>{$suffix}" . mb_substr($content,3);
+    } else {
+    	$content = $suffix.$content;
+    }
+    return $content;
 }
